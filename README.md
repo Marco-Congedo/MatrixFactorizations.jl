@@ -5,8 +5,7 @@
 [![codecov](https://codecov.io/gh/JuliaMatrices/MatrixFactorizations.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaMatrices/MatrixFactorizations.jl)
 
 A Julia package to contain non-standard matrix factorizations. At the moment it 
-implements the QL factorization, though in the future may include other factorizations such 
-as the UL, LQ, and RQ factorizations.
+implements the QL factorization and a function to compute the Cholesky factor and its inverse in one pass. In the future may include other factorizations such as the UL, LQ, and RQ factorizations.
 
 ## QL Factorization
 
@@ -34,5 +33,26 @@ L factor:
   1.08725     0.746217    0.549688  -1.10194  -2.0581
 
 julia> b = randn(5); ql(A) \ b ≈ A \ b
+true
+```
+
+## choleskyinv
+
+Cholesky and inverse Cholesky factorization in one pass. For small marices this is faster than calling `cholesky` and inverting the Cholesky factor:
+
+```julia
+julia> using MatrixFactorizations
+
+julia> X=randn(10, 10);
+
+julia> Y=X*X';
+
+julia> c=choleskyinv(Y)
+Cholesky (.c) and inverse Cholesky (.ci) factorizations       
+
+julia> c.c.L*c.c.U≈Y
+true
+
+julia> c.ci.U*c.ci.L≈inv(Y)
 true
 ```
